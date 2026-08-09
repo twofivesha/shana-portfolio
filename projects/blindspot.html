@@ -63,6 +63,48 @@
               → <span class="step">Gold</span> (Blind Spot Index + sensitivity-rate regression)
               → <span class="step">Serve</span> (Power BI Direct Lake report + public site)</div>
 
+      <h3>Built natively in Microsoft Fabric</h3>
+      <p>
+        Data Factory orchestrates ingestion — parameterized Copy Data and ForEach
+        activities pulling CAISO OASIS demand and NSRDB weather. PySpark notebooks do
+        the Silver and Gold transforms against a Lakehouse. Power BI's semantic model
+        reads Gold directly through Direct Lake, no import/refresh step. Every one of
+        those workspace items below is version-controlled through Fabric's own Git
+        integration — synced straight from the live workspace into source control, not
+        written locally and uploaded.
+      </p>
+
+      <div class="flow">Fabric workspace (synced via Git integration)
+  blindspot_ingest.DataPipeline            Data Factory: Copy_CAISO_Chunk, ForEach_CAISO_Chunk,
+                                            Copy_NSRDB_Zone, ForEach_NSRDB_Zone
+  blindspot_lakehouse.Lakehouse            Silver + Gold tables
+  4x .Notebook                             filter_tracking_the_sun / build_silver / build_gold /
+                                            build_gold_sensitivity_rate  (PySpark)
+  blindspot_semantic_model.SemanticModel   Direct Lake, relationships + DAX measures
+  blindspot_report.Report                  Summary + 2 drill-through pages</div>
+
+      <div class="flow">from pyspark.sql import functions as F
+from pyspark.sql.window import Window
+
+spark.sql("CREATE SCHEMA IF NOT EXISTS gold")
+
+# Layer 1 index formula constants (spec.md §2): Estimated BTM generation(t)
+# = Capacity(t) x Performance Ratio x Irradiance(t) / STC. PERFORMANCE_RATIO
+# is NREL PVWatts' documented default total system losses (14%), i.e.
+# PR = 1 - 0.14 -- an industry-standard rule of thumb, not locally measured.
+PERFORMANCE_RATIO = 0.86
+STANDARD_TEST_IRRADIANCE_W_M2 = 1000
+
+# Layer 2 degree-hour base temperature (spec.md §2, decided 2026-07-21): 65F,
+# the standard NOAA/utility-load-forecasting balance point. NSRDB reports
+# temperature in Celsius, so convert once here rather than carrying two
+# unit systems through the rest of this notebook.
+BASE_TEMP_F = 65
+BASE_TEMP_C = (BASE_TEMP_F - 32) * 5 / 9</div>
+      <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: -0.5rem;">
+        From <code>build_gold.Notebook</code> — synced from the live Fabric workspace, not hand-copied.
+      </p>
+
       <h3>Three inputs, none sufficient alone</h3>
       <ul class="bullets">
         <li><strong>Installed capacity</strong> — how much hidden generation exists, by utility territory (Berkeley Lab / NREL Tracking the Sun).</li>
