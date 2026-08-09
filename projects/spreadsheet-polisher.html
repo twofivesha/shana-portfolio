@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spreadsheet Polisher — Shana Negin</title>
+<meta name="description" content="A buffer that turns human-formatted spreadsheets into clean, typed data for BI tools and warehouses.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<main>
+  <a class="back-link" href="../index.html">&larr; All projects</a>
+
+  <article class="project">
+    <div class="project-header">
+      <div class="kicker">Featured project</div>
+      <h2>Spreadsheet Polisher</h2>
+      <p class="summary">
+        I created....read, vibe coded.... this little tool. A buffer that takes spreadsheets formatted for people and turns it into clean, typed data for
+        ingestion into BI tools and warehouses. I had the idea because I have had so many situations where a sheet comes in that is great for communication but very poortly structured for using in data engineering. I wanted a tool for my personal toolbelt for the reality of an Excel-heavy
+        org that receives the same messy <code>.xlsx</code> every month and needs a faster way of converting it for use in their pipelines. Sure I could just throw the sheet at the ai every time, but if I build a tool like this, we can retain data privacy and I can maybe save some tokens over time.
+      </p>
+      <div class="tags">
+        <span class="tag">Python</span>
+        <span class="tag">pandas</span>
+        <span class="tag">openpyxl</span>
+        <span class="tag">pandera</span>
+        <span class="tag">pyarrow</span>
+        <span class="tag">Streamlit</span>
+        <span class="tag">Claude</span>
+      </div>
+    </div>
+
+    <div class="video-wrap">
+      <iframe
+        src="https://www.youtube.com/embed/llYQRg-keBA"
+        title="SpreadsheetPolisher demo"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <div class="project-body">
+      <h3>The core idea</h3>
+      <p>
+        The LLM never touches the numbers. Given a messy spreadsheet, Claude
+        <em>proposes a cleaning recipe</em> — a reviewable YAML config. A human approves
+        it. Then a deterministic engine executes the approved recipe. The durable
+        artifact is the versioned recipe, so a recurring, same-shaped file replays with
+        <strong>zero LLM calls</strong> and full reproducibility. The LLM only re-engages
+        when the file drifts and validation fails.
+      </p>
+
+      <div class="flow"><span class="step">Propose</span> (LLM, once per new file shape)
+  cruddy.xlsx → extract (cells + formatting) → profile → Claude proposes recipe.yaml
+              → human reviews / edits / approves
+
+<span class="step">Execute</span> (deterministic, every run)
+  file + approved recipe.yaml → locate → normalize → map → validate
+     → out/: clean_&lt;file&gt;.parquet + .csv + schema.json + quality_report.md + audit_log</div>
+
+      <h3>What "cruddy Excel" means here</h3>
+      <ul class="bullets">
+        <li><strong>Structural</strong> — title/logo rows, multi-row/merged headers, interleaved subtotals, blank spacers, multiple tables per sheet, one-sheet-per-month, pivot-wide layouts.</li>
+        <li><strong>Value/type</strong> — numbers-as-text (<code>"1,234"</code>, <code>"$1,200"</code>, <code>"(500)"</code>, <code>"12%"</code>), text/serial dates, null tokens (<code>N/A</code>, <code>-</code>, <code>#REF!</code>), units in cells, mangled IDs.</li>
+        <li><strong>Semantic</strong> — synonym columns (<code>VIN</code> / <code>Vin #</code> / <code>Vehicle ID</code>), categorical drift, duplicate rows.</li>
+        <li><strong>Meaning-in-formatting</strong> — red fill = over budget, bold = subtotal, cell comments.</li>
+      </ul>
+
+      <h3>Two surfaces, one library</h3>
+      <p>
+        A CLI automates the execute path (profile → run → propose); a Streamlit app
+        covers the review/approve path — pick a file, see the profile, propose or load
+        a recipe, watch the dry-run live, approve into <code>recipes/</code>.
+      </p>
+
+      <h3>Principles</h3>
+      <ul class="bullets">
+        <li>Nothing is silently guessed — low-confidence items surface in the quality report.</li>
+        <li>Every transform is logged, so an output number traces back to a source cell.</li>
+      </ul>
+
+      <h3>Status</h3>
+      <div class="status-grid">
+        <div class="status-item"><span class="check">✓</span>Formatting-aware extractor + table-locating profiler</div>
+        <div class="status-item"><span class="check">✓</span>Recipe schema + deterministic executor</div>
+        <div class="status-item"><span class="check">✓</span>LLM proposer (backend-agnostic, subscription-friendly)</div>
+        <div class="status-item"><span class="check">✓</span>Structural layouts: pivot-unpivot + multi-sheet union</div>
+        <div class="status-item"><span class="check">✓</span>Interactive review &amp; approve app</div>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer>
+  Source is private — reach out if you'd like a walkthrough.
+</footer>
+
+</body>
+</html>

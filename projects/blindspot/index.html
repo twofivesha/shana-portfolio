@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Blind Spot Index</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>The Blind Spot Index</h1>
+    <p class="subtitle">
+      How behind-the-meter solar creates blind spots in grid demand visibility: CAISO, 2025.
+    </p>
+  </header>
+
+  <main>
+    <p id="status" class="status" role="status" data-state="loading">Loading data&hellip;</p>
+
+    <section class="controls" aria-labelledby="controls-heading">
+      <h2 id="controls-heading" class="sr-only">Filter by region</h2>
+      <label for="region-select">Region</label>
+      <select id="region-select"></select>
+    </section>
+
+    <section class="kpi-section" aria-labelledby="kpi-heading">
+      <h2 id="kpi-heading" class="sr-only">Key metrics</h2>
+      <div class="kpi-cards" id="kpi-cards"></div>
+    </section>
+
+    <section class="chart-section">
+      <h2>Blind Spot Index by region</h2>
+      <div id="chart-index"></div>
+    </section>
+
+    <section class="chart-section">
+      <h2>Estimated behind-the-meter generation: <span id="trend-region-label"></span></h2>
+      <div id="chart-trend"></div>
+    </section>
+
+    <section class="glossary">
+      <h2>What am I looking at?</h2>
+
+      <div class="glossary-intro">
+        <p>
+          Solar panels on homes and businesses ("behind-the-meter" or "rooftop" solar)
+          generate electricity the grid operator never directly measures. It only sees
+          the <em>net</em> demand left over after that generation offsets it. When clouds
+          roll in and rooftop solar output drops, that hidden generation disappears and
+          demand can jump, with no warning, because maybe the grid operator was never watching
+          it in the first place. That's the blind spot this site measures.
+        </p>
+        <p>
+          The numbers below come in two layers: a <strong>physics-based estimate</strong>
+          (installed solar capacity × weather, no real demand data required) and a
+          <strong>statistical validation</strong> against real, observed demand, so the
+          physics-only estimate isn't just a guess. Data covers California's CAISO grid,
+          full year 2025.
+        </p>
+      </div>
+
+      <h3>Regions</h3>
+      <dl class="glossary-list">
+        <div>
+          <dt>PG&amp;E</dt>
+          <dd>Pacific Gas &amp; Electric: serves Northern and Central California.</dd>
+        </div>
+        <div>
+          <dt>SCE</dt>
+          <dd>Southern California Edison: serves most of Southern California, excluding San Diego.</dd>
+        </div>
+        <div>
+          <dt>SDG&amp;E</dt>
+          <dd>San Diego Gas &amp; Electric: serves San Diego and southern Orange County.</dd>
+        </div>
+      </dl>
+      <p class="glossary-note">
+        Together these three utility territories make up CAISO, the operator of California's
+        electric grid. Demand is tracked separately for each because CAISO publishes real
+        hourly demand at this grain, not just as one statewide number.
+      </p>
+
+      <h3>Metrics</h3>
+      <dl class="glossary-list">
+        <div>
+          <dt>Blind Spot Index</dt>
+          <dd>
+            The share of a region's peak demand that could appear suddenly, with no
+            warning, if the sun goes behind a cloud, computed from installed solar
+            capacity and weather physics alone, sized against that region's peak demand.
+          </dd>
+        </div>
+        <div>
+          <dt>Sensitivity rate</dt>
+          <dd>
+            The real change in demand from hour to hour, based on how sunny or cloudy
+            it is, isolated from other causes like temperature and holidays.
+          </dd>
+        </div>
+        <div>
+          <dt>Total installed capacity</dt>
+          <dd>
+            Total behind-the-meter solar capacity installed in the region, in MW, as of
+            the most recent data available (covers residential and commercial/industrial
+            rooftop systems).
+          </dd>
+        </div>
+        <div>
+          <dt>Estimated BTM generation</dt>
+          <dd>
+            How much electricity behind-the-meter solar is estimated to be producing at
+            each hour of the year. This is the hidden power generation the grid operator
+            never directly measures, and the Blind Spot Index is drawn straight from its
+            worst hour-to-hour swing.
+          </dd>
+        </div>
+      </dl>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

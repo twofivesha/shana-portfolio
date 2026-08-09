@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Blind Spot Index — Shana Negin</title>
+<meta name="description" content="A data pipeline that measures how much behind-the-meter solar hides real electricity demand from grid operators, region by region.">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<main>
+  <a class="back-link" href="../index.html">&larr; All projects</a>
+
+  <article class="project">
+    <div class="project-header">
+      <div class="kicker">Data pipeline + analysis</div>
+      <h2>The Blind Spot Index <span style="font-weight:400; color:var(--text-dim); font-size:0.65em;">(working title)</span></h2>
+      <p class="summary">
+        Solar panels on homes and businesses generate electricity the grid operator
+        never directly measures — it only sees <em>net</em> demand, true consumption
+        minus whatever solar silently offset. As that hidden capacity grows, a stretch
+        of sun followed by clouds stops looking like weather and starts looking like
+        demand appearing from nowhere. This pipeline builds a physics-based index of
+        that blind spot, then validates it statistically against real observed demand,
+        region by region — currently CAISO (PG&amp;E, SCE, SDG&amp;E), 2025.
+      </p>
+      <div class="tags">
+        <span class="tag">Python</span>
+        <span class="tag">DuckDB</span>
+        <span class="tag">PySpark</span>
+        <span class="tag">Microsoft Fabric</span>
+        <span class="tag">Power BI</span>
+        <span class="tag">Observable Plot</span>
+      </div>
+      <a class="report-cta" href="blindspot/index.html" target="_blank" rel="noopener">Open the live report &#8599;</a>
+    </div>
+
+    <div class="report-embed">
+      <iframe
+        src="blindspot/index.html"
+        title="The Blind Spot Index — live report">
+      </iframe>
+    </div>
+
+    <div class="project-body">
+      <h3>The core idea</h3>
+      <p>
+        Two layers, computed independently. <strong>Layer 1</strong> is a physics-only
+        index — installed solar capacity × weather/irradiance, sized against a region's
+        peak demand — computable anywhere with capacity and weather data, even without
+        good demand data. <strong>Layer 2</strong> validates it: a regression of real net
+        load against an irradiance anomaly, controlling for temperature (via
+        cooling/heating degree-hours, not a plain linear term — cloudy days are often
+        cooler days, and a naive control would misattribute some of temperature's effect
+        to solar) and calendar effects. The regression's irradiance coefficient — the
+        <strong>sensitivity rate</strong> — is a real, observed measurement that
+        independently confirms the physics-only index isn't just a guess.
+      </p>
+
+      <div class="flow"><span class="step">Ingest</span> (CAISO OASIS demand + NSRDB weather + Tracking the Sun capacity)
+              → <span class="step">Silver</span> (fact/dim tables, DuckDB locally / Fabric Lakehouse)
+              → <span class="step">Gold</span> (Blind Spot Index + sensitivity-rate regression)
+              → <span class="step">Serve</span> (Power BI Direct Lake report + public site)</div>
+
+      <h3>Three inputs, none sufficient alone</h3>
+      <ul class="bullets">
+        <li><strong>Installed capacity</strong> — how much hidden generation exists, by utility territory (Berkeley Lab / NREL Tracking the Sun).</li>
+        <li><strong>Weather / irradiance</strong> — how much of that capacity is actually producing at a given hour (NREL NSRDB, satellite-derived).</li>
+        <li><strong>Observed net load</strong> — the only thing the grid operator actually measures (CAISO OASIS, hourly, per TAC zone).</li>
+      </ul>
+
+      <h3>Notes</h3>
+      <ul class="bullets">
+        <li>Temperature is controlled for explicitly (CDD/HDD), not folded into the irradiance signal.</li>
+        <li>CAISO's three utility territories (PG&amp;E, SCE, SDG&amp;E) are validated independently rather than blended into one statewide number.</li>
+        <li>The local DuckDB build and the Fabric/PySpark port are cross-validated against each other — same index values, same worst-swing hours, to floating-point noise.</li>
+        <li>Ambiguous capacity-data edge cases (a handful of small municipal utilities) are tagged with a confidence flag rather than silently included or dropped.</li>
+      </ul>
+
+      <h3>Status</h3>
+      <div class="status-grid">
+        <div class="status-item"><span class="check">✓</span>Ingestion: CAISO OASIS, NSRDB, Tracking the Sun</div>
+        <div class="status-item"><span class="check">✓</span>Silver/Gold transform (Blind Spot Index)</div>
+        <div class="status-item"><span class="check">✓</span>Fabric orchestration (Data Factory + PySpark)</div>
+        <div class="status-item"><span class="check">✓</span>Sensitivity-rate regression, local + Fabric, cross-validated</div>
+        <div class="status-item"><span class="check">✓</span>Power BI Direct Lake report + drill-throughs</div>
+        <div class="status-item"><span class="check">✓</span>Public site: live, interactive report (embedded above)</div>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer>
+  Source is private — reach out if you'd like a walkthrough.
+</footer>
+
+</body>
+</html>
