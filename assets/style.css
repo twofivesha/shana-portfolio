@@ -188,6 +188,20 @@ main.wide { max-width: var(--max-width-wide); }
 }
 .report-cta:hover { text-decoration: none; opacity: 0.85; }
 
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.report-cta--secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.report-cta--secondary:hover { text-decoration: none; opacity: 0.7; }
+
 .report-embed {
   position: relative;
   width: 100%;
