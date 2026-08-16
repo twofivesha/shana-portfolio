@@ -39,6 +39,49 @@
       </div>
     </div>
 
+    <!-- One wide graphic on desktop; the same four panels as a swipeable
+         carousel on mobile. Each <img> falls back to a 1x1 transparent GIF so
+         the browser only ever downloads the variant its breakpoint matches —
+         CSS display:none does NOT stop a fetch, but an unmatched <source> does. -->
+    <figure class="project-hero">
+      <picture>
+        <source media="(min-width: 701px)" srcset="blindspot/assets/4panel-final-1x.jpg">
+        <img class="hero-wide" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" loading="lazy"
+             alt="Four-panel explainer. 1, Visible and hidden power: on a sunny day rooftop panels feed a house directly, so that generation never reaches the grid operator's meters. 2, Impact of clouds: when clouds roll in, solar output drops and traditional grid demand rises. 3, Solar plus storage: when solar goes straight back to the home or a battery, the utility doesn't always get to measure it. 4, The grid operator's view: an operator watches a demand curve that swings without an obvious cause — the panels are working, the meters just can't see them yet.">
+      </picture>
+
+      <div class="hero-carousel">
+        <div class="hero-track" tabindex="0" role="group"
+             aria-label="Explainer, 4 panels — scroll sideways to move between them">
+          <picture>
+            <source media="(max-width: 700px)" srcset="blindspot/assets/4panel-mobile-p1.jpg">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" loading="lazy"
+                 alt="Panel 1 of 4, Visible and Hidden Power: on a sunny day, rooftop panels feed the house directly. A sunny day provides maximum solar power.">
+          </picture>
+          <picture>
+            <source media="(max-width: 700px)" srcset="blindspot/assets/4panel-mobile-p2.jpg">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" loading="lazy"
+                 alt="Panel 2 of 4, Impact of Clouds: rain and cloud cover cut output from rooftop and balcony panels. Clouds can increase traditional grid demand by reducing solar output.">
+          </picture>
+          <picture>
+            <source media="(max-width: 700px)" srcset="blindspot/assets/4panel-mobile-p3.jpg">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" loading="lazy"
+                 alt="Panel 3 of 4, Solar + Storage: a street of homes running on batteries after dark. When solar goes straight back to the home, the utility doesn't always get to measure it.">
+          </picture>
+          <picture>
+            <source media="(max-width: 700px)" srcset="blindspot/assets/4panel-mobile-p4.jpg">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" loading="lazy"
+                 alt="Panel 4 of 4, The Grid Operator's View: an operator watches a demand curve swing without an obvious cause. In a single hour, an estimated 4,800 megawatts of rooftop solar was quietly at work across PG&amp;E's territory, then clouds rolled in and it faded — none of it ever appeared on the power company's meters. The panels are working; the meters just can't see them yet.">
+          </picture>
+        </div>
+        <div class="hero-dots" aria-hidden="true">
+          <span class="is-current"></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <figcaption class="hero-hint">Swipe to see all four panels</figcaption>
+    </figure>
+
     <div class="report-embed">
       <iframe
         src="blindspot/index.html"
@@ -135,6 +178,32 @@ BASE_TEMP_C = (BASE_TEMP_F - 32) * 5 / 9</div>
     </div>
   </article>
 </main>
+
+<script>
+// Light up the dot for whichever carousel panel is currently snapped into view.
+(function () {
+  var track = document.querySelector('.hero-track');
+  var dots = document.querySelectorAll('.hero-dots span');
+  if (!track || !dots.length) return;
+
+  function sync() {
+    var slide = track.firstElementChild;
+    if (!slide) return;
+    var step = slide.getBoundingClientRect().width;
+    if (!step) return;
+    var i = Math.min(dots.length - 1, Math.round(track.scrollLeft / step));
+    for (var n = 0; n < dots.length; n++) {
+      dots[n].classList.toggle('is-current', n === i);
+    }
+  }
+
+  // Scroll events are already frame-aligned and the work here is four class
+  // toggles, so this runs directly rather than through requestAnimationFrame.
+  track.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  sync();
+})();
+</script>
 
 </body>
 </html>
