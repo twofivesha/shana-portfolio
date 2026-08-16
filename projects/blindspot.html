@@ -18,12 +18,12 @@
       <h2>The Blind Spot Index <span style="font-weight:400; color:var(--text-dim); font-size:0.65em;">(working title)</span></h2>
       <p class="summary">
         Solar panels on homes and businesses generate electricity the grid operator
-        never directly measures — it only sees <em>net</em> demand, true consumption
+        never directly measure, it only sees <em>net</em> demand, true consumption
         minus whatever solar silently offset. As that hidden capacity grows, a stretch
         of sun followed by clouds stops looking like weather and starts looking like
         demand appearing from nowhere. This pipeline builds a physics-based index of
         that blind spot, then validates it statistically against real observed demand,
-        region by region — currently CAISO (PG&amp;E, SCE, SDG&amp;E), 2025.
+        region by region: currently CAISO (PG&amp;E, SCE, SDG&amp;E), 2025.
       </p>
       <div class="tags">
         <span class="tag">Python</span>
@@ -82,13 +82,6 @@
       <figcaption class="hero-hint">Swipe to see all four panels</figcaption>
     </figure>
 
-    <div class="report-embed">
-      <iframe
-        src="blindspot/index.html"
-        title="The Blind Spot Index — live report">
-      </iframe>
-    </div>
-
     <div class="project-body">
       <h3>The core idea</h3>
       <p>
@@ -99,8 +92,8 @@
         load against an irradiance anomaly, controlling for temperature (via
         cooling/heating degree-hours, not a plain linear term — cloudy days are often
         cooler days, and a naive control would misattribute some of temperature's effect
-        to solar) and calendar effects. The regression's irradiance coefficient — the
-        <strong>sensitivity rate</strong> — is a real, observed measurement that
+        to solar) and calendar effects. The regression's irradiance coefficient ( the
+        <strong>sensitivity rate</strong> ) is a real, observed measurement that
         independently confirms the physics-only index isn't just a guess.
       </p>
 
@@ -173,7 +166,7 @@ BASE_TEMP_C = (BASE_TEMP_F - 32) * 5 / 9</div>
         <div class="status-item"><span class="check">✓</span>Fabric orchestration (Data Factory + PySpark)</div>
         <div class="status-item"><span class="check">✓</span>Sensitivity-rate regression, local + Fabric, cross-validated</div>
         <div class="status-item"><span class="check">✓</span>Power BI Direct Lake report + drill-throughs</div>
-        <div class="status-item"><span class="check">✓</span>Public site: live, interactive report (embedded above)</div>
+        <div class="status-item"><span class="check">✓</span>Public site: live, interactive report (linked above)</div>
       </div>
     </div>
   </article>

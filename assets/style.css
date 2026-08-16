@@ -157,8 +157,9 @@ main.wide { max-width: var(--max-width-wide); }
   border-radius: 12px;
   overflow: hidden;
 }
-/* Explainer graphic between the project header and the live report — same
-   framing as .report-embed so the two media blocks stack consistently.
+/* Explainer graphic between the project header and the write-up — framed to
+   match .report-embed, which is unused for now but kept for when the charts
+   come back inline.
    Desktop gets one wide image; below 700px the same four panels become a
    swipeable carousel (see the mobile block at the end of this file), which
    keeps the explainer one screen tall instead of ~2400px of scrolling.
