@@ -10,16 +10,46 @@
   <header>
     <h1>The Blind Spot Index</h1>
     <p class="subtitle">
-      How behind-the-meter solar creates blind spots in grid demand visibility: CAISO, 2025.
+      Rooftop solar is invisible to the grid operator. This measures how big a surprise
+      that becomes when a cloud rolls in. California, 2025.
     </p>
   </header>
 
   <main>
+    <section class="lede" aria-labelledby="lede-heading">
+      <h2 id="lede-heading">Start here</h2>
+      <p>
+        When solar panels on a home or a warehouse make electricity, that power lands on
+        the customer's side of the electric meter. Some of it is used on site; the surplus
+        flows back out and serves a neighbor. Either way the grid operator never measures
+        the generation itself. All it sees is the <em>net</em> demand left over, once the
+        panels have covered whatever they covered. It cannot tell the difference between
+        a quiet hour and a sunny one.
+      </p>
+      <p>
+        Then a cloud bank moves in. Solar output can fall by most of its value within an
+        hour, but the lights, servers, and air conditioners stay on, so that load can
+        land back on the grid all at once. On the operator's screens nothing caused it.
+        Demand simply jumps. That's the blind spot of predicting demand. As more and more
+        behind-the-meter solar output is generated, due to solar power generation becoming
+        cheaper and more convenient, this fluctuation will increase.
+      </p>
+      <p>
+        This page sizes that blind spot for California's three big utility territories.
+        A <strong>physics estimate</strong>
+        works forward from how much rooftop solar is installed and how much sunlight
+        actually hit it, hour by hour, using no demand data at all. A
+        <strong>statistical check</strong> then works backward from real, metered demand
+        to see whether it moves with cloud cover the way the physics says it should. It
+        does, in all three territories.
+      </p>
+    </section>
+
     <p id="status" class="status" role="status" data-state="loading">Loading data&hellip;</p>
 
     <section class="controls" aria-labelledby="controls-heading">
       <h2 id="controls-heading" class="sr-only">Filter by region</h2>
-      <label for="region-select">Region</label>
+      <label for="region-select">Utility territory</label>
       <select id="region-select"></select>
     </section>
 
@@ -29,92 +59,144 @@
     </section>
 
     <section class="chart-section">
-      <h2>Blind Spot Index by region</h2>
+      <h2>How exposed is each territory?</h2>
+      <p class="chart-caption">
+        Each bar is that territory's worst one-hour loss of rooftop solar in 2025,
+        measured against its own peak demand. Reading it as a share rather than in
+        megawatts is what makes the three comparable: SDG&amp;E is by far the smallest
+        grid here, and also the most exposed.
+      </p>
       <div id="chart-index"></div>
     </section>
 
     <section class="chart-section">
-      <h2>Estimated behind-the-meter generation: <span id="trend-region-label"></span></h2>
+      <h2>The worst hour of 2025: <span id="swing-region-label"></span></h2>
+      <p class="chart-caption" id="swing-caption"></p>
+      <div id="chart-swing"></div>
+    </section>
+
+    <section class="chart-section">
+      <h2>Hidden solar, every hour of the year: <span id="trend-region-label"></span></h2>
+      <p class="chart-caption">
+        All 8,760 hours of 2025, so the shape matters more than any single point. The
+        solid band is the daily sunrise-to-sunset cycle repeating 365 times; its top
+        edge traces the seasonal arc, high in summer and low in winter. The ragged
+        notches in that top edge are cloudy days. Every one of them is generation the
+        grid operator had to absorb without seeing it go.
+      </p>
       <div id="chart-trend"></div>
     </section>
 
     <section class="glossary">
-      <h2>What am I looking at?</h2>
+      <h2>The numbers, defined</h2>
 
-      <div class="glossary-intro">
-        <p>
-          Solar panels on homes and businesses ("behind-the-meter" or "rooftop" solar)
-          generate electricity the grid operator never directly measures. It only sees
-          the <em>net</em> demand left over after that generation offsets it. When clouds
-          roll in and rooftop solar output drops, that hidden generation disappears and
-          demand can jump, with no warning, because maybe the grid operator was never watching
-          it in the first place. That's the blind spot this site measures.
-        </p>
-        <p>
-          The numbers below come in two layers: a <strong>physics-based estimate</strong>
-          (installed solar capacity × weather, no real demand data required) and a
-          <strong>statistical validation</strong> against real, observed demand, so the
-          physics-only estimate isn't just a guess. Data covers California's CAISO grid,
-          full year 2025.
-        </p>
-      </div>
-
-      <h3>Regions</h3>
-      <dl class="glossary-list">
-        <div>
-          <dt>PG&amp;E</dt>
-          <dd>Pacific Gas &amp; Electric: serves Northern and Central California.</dd>
-        </div>
-        <div>
-          <dt>SCE</dt>
-          <dd>Southern California Edison: serves most of Southern California, excluding San Diego.</dd>
-        </div>
-        <div>
-          <dt>SDG&amp;E</dt>
-          <dd>San Diego Gas &amp; Electric: serves San Diego and southern Orange County.</dd>
-        </div>
-      </dl>
-      <p class="glossary-note">
-        Together these three utility territories make up CAISO, the operator of California's
-        electric grid. Demand is tracked separately for each because CAISO publishes real
-        hourly demand at this grain, not just as one statewide number.
-      </p>
-
-      <h3>Metrics</h3>
       <dl class="glossary-list">
         <div>
           <dt>Blind Spot Index</dt>
           <dd>
-            The share of a region's peak demand that could appear suddenly, with no
-            warning, if the sun goes behind a cloud, computed from installed solar
-            capacity and weather physics alone, sized against that region's peak demand.
+            The largest one-hour drop in estimated rooftop solar output during 2025,
+            divided by that territory's highest measured demand of the year. A reading of
+            25% means the worst single-hour disappearance of hidden generation was worth
+            a quarter of the territory's busiest hour. The drop and the peak are the two
+            worst hours of the year for each measure, not necessarily the same hour: this
+            sizes one against the other, it doesn't describe one moment.
           </dd>
         </div>
         <div>
-          <dt>Sensitivity rate</dt>
+          <dt>Hidden share at midday</dt>
           <dd>
-            The real change in demand from hour to hour, based on how sunny or cloudy
-            it is, isolated from other causes like temperature and holidays.
+            Between 11&nbsp;a.m. and 2&nbsp;p.m., the share of all electricity being
+            consumed that comes from rooftop solar and so never appears in demand data.
+            The denominator is gross load: metered demand plus the estimated rooftop
+            generation offsetting it. Whether a given kilowatt-hour was used on site or
+            exported to a neighbor doesn't change this. Both reduce metered demand by the
+            same amount, and the neighbor is inside the territory either way.
           </dd>
         </div>
         <div>
-          <dt>Total installed capacity</dt>
+          <dt>Biggest one-hour drop</dt>
           <dd>
-            Total behind-the-meter solar capacity installed in the region, in MW, as of
-            the most recent data available (covers residential and commercial/industrial
-            rooftop systems).
+            The raw megawatt version of the Blind Spot Index, and the hour it happened.
+            For scale, a large natural-gas plant is roughly 500&nbsp;MW, so these are
+            multi-plant swings.
           </dd>
         </div>
         <div>
-          <dt>Estimated BTM generation</dt>
+          <dt>Cloud-driven swing days</dt>
           <dd>
-            How much electricity behind-the-meter solar is estimated to be producing at
-            each hour of the year. This is the hidden power generation the grid operator
-            never directly measures, and the Blind Spot Index is drawn straight from its
-            worst hour-to-hour swing.
+            Days in 2025 with at least one hour where rooftop output fell by 5% or more
+            of peak demand <em>and</em> the sun was still well up. Sunset produces a much
+            larger drop every single evening, but it arrives on schedule and operators
+            plan around it. Only the unscheduled kind counts here.
+          </dd>
+        </div>
+        <div>
+          <dt>Demand response to cloud cover</dt>
+          <dd>
+            The statistical check: how many megawatts metered demand actually rises when
+            cloud cover increases by 10 percentage points against a clear sky, holding
+            temperature, weekends, and holidays fixed. This is measured from real demand,
+            with no reference to the physics estimate, which is what makes it independent
+            confirmation rather than a restatement. R&sup2; is how much of the hour-to-hour
+            variation in demand the model accounts for overall.
+          </dd>
+        </div>
+        <div>
+          <dt>Rooftop solar installed</dt>
+          <dd>
+            Total behind-the-meter capacity in the territory, covering both homes and
+            commercial buildings. A commercial rooftop array offsetting its own building's
+            draw is exactly as invisible to the operator as a homeowner's, so both belong
+            in the same number.
           </dd>
         </div>
       </dl>
+
+      <h3>The three territories</h3>
+      <dl class="glossary-list">
+        <div>
+          <dt>PG&amp;E</dt>
+          <dd>Pacific Gas &amp; Electric: Northern and Central California.</dd>
+        </div>
+        <div>
+          <dt>SCE</dt>
+          <dd>Southern California Edison: most of Southern California, excluding San Diego.</dd>
+        </div>
+        <div>
+          <dt>SDG&amp;E</dt>
+          <dd>San Diego Gas &amp; Electric: San Diego and southern Orange County.</dd>
+        </div>
+      </dl>
+      <p class="glossary-note">
+        Together these make up most of CAISO, the operator of California's grid. They are
+        kept separate because CAISO publishes real hourly demand for each one, which means
+        three independent tests of the idea instead of one statewide average. "All regions"
+        adds them up hour by hour and recomputes from the combined total, so it reflects a
+        genuine coincident peak and a genuine coincident swing rather than an average of
+        the three.
+      </p>
+
+      <h3>Where the data comes from, and what it can't tell you</h3>
+      <p class="glossary-note">
+        Installed capacity is from Berkeley Lab's <em>Tracking the Sun</em>, built from
+        utility interconnection filings. Sunlight is satellite-derived from NREL's NSRDB.
+        Demand is CAISO's own published actuals, per territory. All figures cover 2025.
+      </p>
+      <p class="glossary-note">
+        Two limits worth stating plainly. First, rooftop generation here is a
+        <em>modeled</em> figure, not a metered one. Surplus sent back to the grid does get
+        metered, for billing, but the share consumed on site never does, so nobody records
+        total output. That is the premise of the project, and it is why the physics
+        estimate is checked against real demand rather than against a direct measurement
+        of the generation itself. There isn't one. Second,
+        each territory's weather comes from a single
+        satellite grid point, so the model treats one cloud as shading every panel in the
+        territory at once. Real fleets are spread over hundreds of miles and never all go
+        dark together, which means the single-hour swings here should be read as an upper
+        bound on how bad a cloud event gets, not as a typical one. The day-to-day and
+        midday shares, which don't hinge on one extreme hour, are the more robust numbers
+        on this page.
+      </p>
     </section>
   </main>
 
